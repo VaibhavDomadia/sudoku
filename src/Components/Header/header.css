@@ -1,0 +1,18 @@
+.header {
+    display: grid;
+    padding: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+}
+
+.title {
+    margin: 0px;
+    margin-left: 16px;
+}
+
+.githubIcon {
+    width: 32px;
+    height: 32px;
+    justify-self: end;
+    margin-right: 16px;
+}
