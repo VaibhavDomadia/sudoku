@@ -11,7 +11,9 @@ class Header extends React.Component {
         return (
             <div className = "header">
                 <h2 className = "title">SUDOKU</h2>
-                <img src = {GithubIcon} className = "githubIcon"></img>
+                <a href = "https://github.com/VaibhavDomadia/sudoku" className = "githubIcon">
+                    <img src = {GithubIcon} alt = "Github Icon"></img>
+                </a>
             </div>
         );
     }
