@@ -1,6 +1,7 @@
 import React from 'react';
 import './gamearena.css';
 import Board from '../Board/board';
+import CellPickupBar from '../CellPickupBar/cellpickupbar';
 
 const BOARD_SIZE = 9;
 
@@ -16,6 +17,7 @@ class GameArena extends React.Component {
         }
         return (
             <div className = "gameArena">
+                <CellPickupBar/>
                 <Board boardSize = {BOARD_SIZE} board = {board}/>
             </div>
         );
