@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Header from './Components/Header/header';
-import Board from './Components/Board/board';
+import GameArena from './Components/GameArena/gamearena';
 
 class App extends React.Component {
     constructor(props) {
@@ -13,7 +13,7 @@ class App extends React.Component {
         return (
             <div>
                 <Header/>
-                <Board/>
+                <GameArena/>
             </div>
         )
     }
