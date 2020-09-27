@@ -10,7 +10,7 @@ class CellPickupBar extends React.Component {
     render() {
         let cells = [];
         for(let i=0 ; i<10 ; i++) {
-            cells.push(<PickupCell cellValue = {i}/>);
+            cells.push(<PickupCell key = {i} cellValue = {i}/>);
         }
         return (
             <div className = "cellPickupBar">

@@ -8,7 +8,9 @@ class HowToPlay extends React.Component {
 
     render() {
         return (
-            <div>How to Play</div>
+            <div className = "howToPlay">
+                How To Play
+            </div>
         );
     }
 }

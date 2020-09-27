@@ -21,12 +21,16 @@ class GameArena extends React.Component {
         }
         return (
             <div className = "gameArena">
-                <ResetBoard/>
-                <GenerateBoard/>
-                <Solution/>
                 <HowToPlay/>
-                <CellPickupBar/>
-                <Board boardSize = {BOARD_SIZE} board = {board}/>
+                <div className = "dragAndDropContainer">
+                    <CellPickupBar/>
+                    <Board boardSize = {BOARD_SIZE} board = {board}/>
+                </div>
+                <div className = "controls">
+                    <ResetBoard/>
+                    <GenerateBoard/>
+                    <Solution/>
+                </div>
             </div>
         );
     }
