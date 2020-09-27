@@ -1,0 +1,7 @@
+.board {
+    display: grid;
+    background-color: #eeeeee;
+    padding: 8px;
+    margin: 8px;
+    grid-gap: 8px;
+}
