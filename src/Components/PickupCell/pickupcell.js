@@ -1,7 +1,7 @@
 import React from 'react';
-import './cell.css';
+import './pickupcell.css';
 
-class Cell extends React.Component {
+class PickupCell extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -10,11 +10,9 @@ class Cell extends React.Component {
         let {cellValue} = this.props;
 
         return (
-            <div className = "cell">
-                {cellValue}
-            </div>
+            <div className = "pickupCell">{cellValue}</div>
         );
     }
 }
 
-export default Cell;
+export default PickupCell;
