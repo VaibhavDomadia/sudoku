@@ -7,8 +7,12 @@ class GenerateBoard extends React.Component {
     }
 
     render() {
+        let {onNewGame} = this.props;
+
         return (
-            <button>Generate Board</button>
+            <button onClick = {onNewGame}>
+                New Game
+            </button>
         );
     }
 }

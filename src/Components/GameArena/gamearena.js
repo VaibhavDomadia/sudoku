@@ -56,6 +56,7 @@ class GameArena extends React.Component {
     }
 
     createNewGame() {
+        console.log("On new Game");
         let board = this.generateBoard();
         let fixed = this.getEmptyBoard(false);
         for(let i=0 ; i<BOARD_SIZE ; i++) {
@@ -66,7 +67,7 @@ class GameArena extends React.Component {
             }
         }
 
-        this.setState({board: board, fixed: fixed});
+        this.setState({board: board, fixed: fixed, highlight: this.getEmptyBoard(false), error: this.getEmptyBoard(false), isSudokuSolved: false});
     }
 
     generateBoard() {
@@ -381,7 +382,7 @@ class GameArena extends React.Component {
                 </div>
                 <div className = "controls">
                     <ResetBoard/>
-                    <GenerateBoard/>
+                    <GenerateBoard onNewGame = {this.createNewGame}/>
                     <Solution/>
                 </div>
             </div>
