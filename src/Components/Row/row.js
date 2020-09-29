@@ -8,11 +8,11 @@ class Row extends React.Component {
     }
 
     render() {
-        let {boardSize, cellValues} = this.props;
+        let {boardSize, rowNumber, cellValues, highlight, focus, fixed, error, onDrop, onDragEnter, onDragLeave} = this.props;
 
         let cells = [];
         for(let i=0 ; i<boardSize ; i++) {
-            cells.push(<Cell key = {i} cellValue = {cellValues[i]}/>);
+            cells.push(<Cell key = {i} rowNumber = {rowNumber} columnNumber = {i} cellValue = {cellValues[i]} highlight = {highlight[i]} focus = {focus[i]} fixed = {fixed[i]} error = {error[i]} onDrop = {onDrop} onDragEnter = {onDragEnter} onDragLeave = {onDragLeave}/>);
         }
 
         return (

@@ -5,5 +5,18 @@
     width: 32px;
     height: 32px;
     border-radius: 4px;
+    box-sizing: border-box;
     background-color: yellow;
+}
+
+.highlight {
+    background-color: blue;
+}
+
+.fixed {
+    font-weight: bold;
+}
+
+.error {
+    background-color: red;
 }
