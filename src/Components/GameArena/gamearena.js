@@ -37,6 +37,7 @@ class GameArena extends React.Component {
 
     onDrop(event, x, y) {
         event.stopPropagation();
+        event.target.style.border = null;
 
         let valueToPut = event.dataTransfer.getData('text/html');
 
@@ -51,6 +52,7 @@ class GameArena extends React.Component {
 
     onDragEnter(event, x, y) {
         let toHighlight = this.getEmptyBoard(false);
+        event.target.style.border = "2px dashed black";
 
         for(let index = 0 ; index < 9 ; index++) {
             toHighlight[x][index] = true;
@@ -69,6 +71,7 @@ class GameArena extends React.Component {
     }
 
     onDragLeave(event, x, y) {
+        event.target.style.border = null;
         this.setState({highlight: this.getEmptyBoard(false)});
     }
 
