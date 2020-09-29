@@ -19,12 +19,28 @@ class GameArena extends React.Component {
         this.onDragLeave = this.onDragLeave.bind(this);
         this.findError = this.findError.bind(this);
         this.isSudokuSolved = this.isSudokuSolved.bind(this);
+        this.generateBoard = this.generateBoard.bind(this);
+        this.solveSudoku = this.solveSudoku.bind(this);
+        this.isMultipleSolutionsPossible = this.isMultipleSolutionsPossible.bind(this);
+        this.shuffleArray = this.shuffleArray.bind(this);
+        this.isValidBoard = this.isValidBoard.bind(this);
+        this.createNewGame = this.createNewGame.bind(this);
+
+        let board = this.generateBoard();
+        let fixed = this.getEmptyBoard(false);
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            for(let j=0 ; j<BOARD_SIZE ; j++) {
+                if(board[i][j] != 0) {
+                    fixed[i][j] = true;
+                }
+            }
+        }
 
         this.state = {
-            board: this.getEmptyBoard(0),
+            board: board,
             highlight: this.getEmptyBoard(false),
             focus: this.getEmptyBoard(false),
-            fixed: this.getEmptyBoard(false),
+            fixed: fixed,
             error: this.getEmptyBoard(false),
             isSudokuSolved: false
         }
@@ -37,6 +53,167 @@ class GameArena extends React.Component {
         }
 
         return board;
+    }
+
+    createNewGame() {
+        let board = this.generateBoard();
+        let fixed = this.getEmptyBoard(false);
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            for(let j=0 ; j<BOARD_SIZE ; j++) {
+                if(board[i][j] != 0) {
+                    fixed[i][j] = true;
+                }
+            }
+        }
+
+        this.setState({board: board, fixed: fixed});
+    }
+
+    generateBoard() {
+        let board = this.getEmptyBoard(0);
+        this.solveSudoku(board);
+
+        let indices = new Array(BOARD_SIZE * BOARD_SIZE);
+        for(let i=0 ; i<BOARD_SIZE * BOARD_SIZE ; i++) {
+            indices[i] = i;
+        }
+
+        this.shuffleArray(indices);
+
+        console.log(indices);
+
+        let lastRecordedUniqueBoard = new Array(BOARD_SIZE);
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            lastRecordedUniqueBoard[i] = board[i].slice();
+        }
+
+        for(let i=BOARD_SIZE * BOARD_SIZE - 1 ; i>20 ; i--) {
+            let index = indices[i];
+            board[Math.floor(index / BOARD_SIZE)][index % BOARD_SIZE] = 0;
+            let solutionsPossible = this.isMultipleSolutionsPossible(board);
+            if(solutionsPossible == 1) {
+                for(let j=0 ; j<BOARD_SIZE ; j++) {
+                    for(let k=0 ; k<BOARD_SIZE ; k++) {
+                        lastRecordedUniqueBoard[j][k] = board[j][k];
+                    }
+                }
+            }
+        }
+
+        return lastRecordedUniqueBoard;
+    }
+
+    isMultipleSolutionsPossible(board) {
+        let alreadyFilled = true;
+        let x = 0;
+        let y = 0;
+        outer: for(let i=0 ; i<BOARD_SIZE ; i++) {
+            for(let j=0 ; j<BOARD_SIZE ; j++) {
+                if(board[i][j] == 0) {
+                    x = i;
+                    y = j;
+                    alreadyFilled = false;
+                    break outer;
+                }
+            }
+        }
+
+        if(alreadyFilled) {
+            return 1;
+        }
+
+        let values = new Array(BOARD_SIZE);
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            values[i] = i+1;
+        }
+        this.shuffleArray(values);
+
+        let solutionPossibleCount = 0;
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            if(this.isValidBoard(board, x, y, values[i])) {
+                board[x][y] = values[i];
+                solutionPossibleCount += this.isMultipleSolutionsPossible(board);
+                if(solutionPossibleCount > 1) {
+                    return solutionPossibleCount;
+                }
+                board[x][y] = 0;
+            }
+        }
+
+        return solutionPossibleCount;
+    }
+
+    solveSudoku(board) {
+        let alreadyFilled = true;
+        let x = 0;
+        let y = 0;
+        outer: for(let i=0 ; i<BOARD_SIZE ; i++) {
+            for(let j=0 ; j<BOARD_SIZE ; j++) {
+                if(board[i][j] == 0) {
+                    x = i;
+                    y = j;
+                    alreadyFilled = false;
+                    break outer;
+                }
+            }
+        }
+
+        if(alreadyFilled) {
+            return true;
+        }
+
+        let values = new Array(BOARD_SIZE);
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            values[i] = i+1;
+        }
+        this.shuffleArray(values);
+
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            if(this.isValidBoard(board, x, y, values[i])) {
+                board[x][y] = values[i];
+                if(this.solveSudoku(board)) {
+                    return true;
+                }
+                else {
+                    board[x][y] = 0;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    isValidBoard(board, x, y, value) {
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            if(board[x][i] == value) {
+                return false;
+            }
+            if(board[i][y] == value) {
+                return false;
+            }
+        }
+
+        let squareBlockStartX = x - (x%3);
+        let squareBlockStartY = y - (y%3);
+        for(let i=squareBlockStartX ; i<squareBlockStartX+3 ; i++) {
+            for(let j=squareBlockStartY ; j<squareBlockStartY+3 ; j++) {
+                if(board[i][j] == value) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    shuffleArray(array) {
+        for(let i=array.length-1 ; i>=0 ; i--) {
+            let index = Math.floor(Math.random() * i+1);
+
+            let temp = array[index];
+            array[index] = array[i];
+            array[i] = temp;
+        }
     }
 
     findError(board) {
