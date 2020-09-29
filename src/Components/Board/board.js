@@ -8,11 +8,11 @@ class Board extends React.Component {
     }
 
     render() {
-        let {boardSize, board} = this.props;
+        let {boardSize, board, highlight, focus, fixed, onDrop, onDragEnter, onDragLeave} = this.props;
 
         let rows = [];
         for(let i=0 ; i<boardSize ; i++) {
-            rows.push(<Row key = {i} boardSize = {boardSize} cellValues = {board[i]}/>);
+            rows.push(<Row key = {i} rowNumber = {i} boardSize = {boardSize} cellValues = {board[i]} highlight = {highlight[i]} focus = {focus[i]} fixed = {fixed[i]} onDrop = {onDrop} onDragEnter = {onDragEnter} onDragLeave = {onDragLeave}/>);
         }
 
         return (
