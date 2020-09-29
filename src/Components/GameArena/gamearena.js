@@ -17,12 +17,14 @@ class GameArena extends React.Component {
         this.onDrop = this.onDrop.bind(this);
         this.onDragEnter = this.onDragEnter.bind(this);
         this.onDragLeave = this.onDragLeave.bind(this);
+        this.findError = this.findError.bind(this);
 
         this.state = {
             board: this.getEmptyBoard(0),
             highlight: this.getEmptyBoard(false),
             focus: this.getEmptyBoard(false),
-            fixed: this.getEmptyBoard(false)
+            fixed: this.getEmptyBoard(false),
+            error: this.getEmptyBoard(false)
         }
     }
 
@@ -35,6 +37,65 @@ class GameArena extends React.Component {
         return board;
     }
 
+    findError(board, x, y) {
+        let newErrorBoard = this.getEmptyBoard(false);
+
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            let rowMap = new Map();
+            for(let j=0 ; j<BOARD_SIZE ; j++) {
+                if(board[i][j] != 0) {
+                    if(rowMap.has(board[i][j])) {
+                        let index = rowMap.get(board[i][j]);
+                        newErrorBoard[i][index] = true;
+                        newErrorBoard[i][j] = true;
+                    }
+                    else {
+                        rowMap.set(board[i][j], j);
+                    }
+                }
+            }
+        }
+
+        for(let j=0 ; j<BOARD_SIZE ; j++) {
+            let columnMap = new Map();
+            for(let i=0 ; i<BOARD_SIZE ; i++) {
+                if(board[i][j] != 0) {
+                    if(columnMap.has(board[i][j])) {
+                        let index = columnMap.get(board[i][j]);
+                        newErrorBoard[index][j] = true;
+                        newErrorBoard[i][j] = true;
+                    }
+                    else {
+                        columnMap.set(board[i][j], i);
+                    }
+                }
+            }
+        }
+
+        let blockMaps = new Array(BOARD_SIZE);
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            blockMaps[i] = new Map();
+        }
+
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            for(let j=0 ; j<BOARD_SIZE ; j++) {
+                if(board[i][j] != 0) {
+                    let mapIndex = (Math.floor(i/3))*3 + (Math.floor(j/3));
+                    if(blockMaps[mapIndex].has(board[i][j])) {
+                        let index = blockMaps[mapIndex].get(board[i][j]);
+                        newErrorBoard[Math.floor(index / BOARD_SIZE)][index % BOARD_SIZE] = true;
+                        newErrorBoard[i][j] = true;
+                    }
+                    else {
+                        blockMaps[mapIndex].set(board[i][j], i*BOARD_SIZE + j);
+                    }
+                }
+            }
+        }
+
+        return newErrorBoard;
+    }
+
     onDrop(event, x, y) {
         event.stopPropagation();
         event.target.style.border = null;
@@ -43,11 +104,13 @@ class GameArena extends React.Component {
 
         let newBoard = new Array(BOARD_SIZE);
         for(let i=0 ; i<BOARD_SIZE ; i++) {
-            newBoard[i] = this.state.board[i];
+            newBoard[i] = this.state.board[i].slice();
         }
         newBoard[x][y] = valueToPut;
+
+        let newErrorBoard = this.findError(newBoard, x, y);
         
-        this.setState({board: newBoard, highlight: this.getEmptyBoard(false)});
+        this.setState({board: newBoard, highlight: this.getEmptyBoard(false), error: newErrorBoard});
     }
 
     onDragEnter(event, x, y) {
@@ -76,14 +139,14 @@ class GameArena extends React.Component {
     }
 
     render() {
-        let {board, highlight, focus, fixed} = this.state;
+        let {board, highlight, focus, fixed, error} = this.state;
 
         return (
             <div className = "gameArena">
                 <HowToPlay/>
                 <div className = "dragAndDropContainer">
                     <CellPickupBar/>
-                    <Board boardSize = {BOARD_SIZE} board = {board} highlight = {highlight} focus = {focus} fixed = {fixed} onDrop = {this.onDrop} onDragEnter = {this.onDragEnter} onDragLeave = {this.onDragLeave}/>
+                    <Board boardSize = {BOARD_SIZE} board = {board} highlight = {highlight} focus = {focus} fixed = {fixed} error = {error} onDrop = {this.onDrop} onDragEnter = {this.onDragEnter} onDragLeave = {this.onDragLeave}/>
                 </div>
                 <div className = "controls">
                     <ResetBoard/>

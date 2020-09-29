@@ -17,15 +17,24 @@ class Cell extends React.Component {
     }
 
     render() {
-        let {cellValue, rowNumber, columnNumber, highlight, focus, fixed, onDrop, onDragEnter, onDragLeave} = this.props;
+        let {cellValue, rowNumber, columnNumber, highlight, focus, fixed, error, onDrop, onDragEnter, onDragLeave} = this.props;
 
-        let style = {}
+        let className = ['cell'];
+        
         if(highlight) {
-            style.backgroundColor = 'green';
+            className.push('highlight');
+        }
+        
+        if(fixed) {
+            className.push('fixed');
+        }
+
+        if(error) {
+            className.push('error');
         }
 
         return (
-            <div className = "cell" style = {style} onDrop = {event => onDrop(event, rowNumber, columnNumber)} onDragOver = {this.onDragOver} onDragEnter = {event => onDragEnter(event, rowNumber, columnNumber)} onDragLeave = {event => onDragLeave(event, rowNumber, columnNumber)}>
+            <div className = {className.join(' ')} onDrop = {event => onDrop(event, rowNumber, columnNumber)} onDragOver = {this.onDragOver} onDragEnter = {event => onDragEnter(event, rowNumber, columnNumber)} onDragLeave = {event => onDragLeave(event, rowNumber, columnNumber)}>
                 {cellValue}
             </div>
         );

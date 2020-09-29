@@ -8,3 +8,15 @@
     box-sizing: border-box;
     background-color: yellow;
 }
+
+.highlight {
+    background-color: blue;
+}
+
+.fixed {
+    font-weight: bold;
+}
+
+.error {
+    background-color: red;
+}
