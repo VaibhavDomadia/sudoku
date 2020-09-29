@@ -25,6 +25,7 @@ class GameArena extends React.Component {
         this.shuffleArray = this.shuffleArray.bind(this);
         this.isValidBoard = this.isValidBoard.bind(this);
         this.createNewGame = this.createNewGame.bind(this);
+        this.onResetBoard = this.onResetBoard.bind(this);
 
         let board = this.generateBoard();
         let fixed = this.getEmptyBoard(false);
@@ -68,6 +69,21 @@ class GameArena extends React.Component {
         }
 
         this.setState({board: board, fixed: fixed, highlight: this.getEmptyBoard(false), error: this.getEmptyBoard(false), isSudokuSolved: false});
+    }
+
+    onResetBoard() {
+        let {board, fixed} = this.state;
+        let newBoard = this.getEmptyBoard(0);
+
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            for(let j=0 ; j<BOARD_SIZE ; j++) {
+                if(fixed[i][j]) {
+                    newBoard[i][j] = board[i][j];
+                }
+            }
+        }
+
+        this.setState({board: newBoard, fixed: fixed, highlight: this.getEmptyBoard(false), error: this.getEmptyBoard(false), isSudokuSolved: false});
     }
 
     generateBoard() {
@@ -381,7 +397,7 @@ class GameArena extends React.Component {
                     <Board boardSize = {BOARD_SIZE} board = {board} highlight = {highlight} focus = {focus} fixed = {fixed} error = {error} isSudokuSolved = {isSudokuSolved} onDrop = {this.onDrop} onDragEnter = {this.onDragEnter} onDragLeave = {this.onDragLeave}/>
                 </div>
                 <div className = "controls">
-                    <ResetBoard/>
+                    <ResetBoard onResetBoard = {this.onResetBoard}/>
                     <GenerateBoard onNewGame = {this.createNewGame}/>
                     <Solution/>
                 </div>

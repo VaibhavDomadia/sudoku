@@ -7,8 +7,12 @@ class ResetBoard extends React.Component {
     }
 
     render() {
+        let {onResetBoard} = this.props;
+
         return (
-            <button>Reset Board</button>
+            <button onClick = {onResetBoard}>
+                Reset Board
+            </button>
         );
     }
 }
