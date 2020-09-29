@@ -18,13 +18,15 @@ class GameArena extends React.Component {
         this.onDragEnter = this.onDragEnter.bind(this);
         this.onDragLeave = this.onDragLeave.bind(this);
         this.findError = this.findError.bind(this);
+        this.isSudokuSolved = this.isSudokuSolved.bind(this);
 
         this.state = {
             board: this.getEmptyBoard(0),
             highlight: this.getEmptyBoard(false),
             focus: this.getEmptyBoard(false),
             fixed: this.getEmptyBoard(false),
-            error: this.getEmptyBoard(false)
+            error: this.getEmptyBoard(false),
+            isSudokuSolved: false
         }
     }
 
@@ -37,7 +39,7 @@ class GameArena extends React.Component {
         return board;
     }
 
-    findError(board, x, y) {
+    findError(board) {
         let newErrorBoard = this.getEmptyBoard(false);
 
         for(let i=0 ; i<BOARD_SIZE ; i++) {
@@ -80,7 +82,7 @@ class GameArena extends React.Component {
         for(let i=0 ; i<BOARD_SIZE ; i++) {
             for(let j=0 ; j<BOARD_SIZE ; j++) {
                 if(board[i][j] != 0) {
-                    let mapIndex = (Math.floor(i/3))*3 + (Math.floor(j/3));
+                    let mapIndex = (Math.floor(i/3)*3) + (Math.floor(j/3));
                     if(blockMaps[mapIndex].has(board[i][j])) {
                         let index = blockMaps[mapIndex].get(board[i][j]);
                         newErrorBoard[Math.floor(index / BOARD_SIZE)][index % BOARD_SIZE] = true;
@@ -96,6 +98,56 @@ class GameArena extends React.Component {
         return newErrorBoard;
     }
 
+    isSudokuSolved(board) {
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            let rowSet = new Set();
+            for(let j=0 ; j<BOARD_SIZE ; j++) {
+                if(board[i][j] != 0) {
+                    rowSet.add(board[i][j]);
+                }
+            }
+
+            if(rowSet.size != BOARD_SIZE) {
+                return false;
+            }
+        }
+
+        for(let j=0 ; j<BOARD_SIZE ; j++) {
+            let columnSet = new Set();
+            for(let i=0 ; i<BOARD_SIZE ; i++) {
+                if(board[i][j] != 0) {
+                    columnSet.add(board[i][j]);
+                }
+            }
+
+            if(columnSet.size != BOARD_SIZE) {
+                return false;
+            }
+        }
+
+        let blockSets = new Array(BOARD_SIZE);
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            blockSets[i] = new Set();
+        }
+
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            for(let j=0 ; j<BOARD_SIZE ; j++) {
+                if(board[i][j] != 0) {
+                    let setIndex = (Math.floor(i/3)*3) + Math.floor(j/3);
+                    blockSets[setIndex].add(board[i][j]);
+                }
+            }
+        }
+
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            if(blockSets[i].size != BOARD_SIZE) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     onDrop(event, x, y) {
         event.stopPropagation();
         event.target.style.border = null;
@@ -108,9 +160,11 @@ class GameArena extends React.Component {
         }
         newBoard[x][y] = valueToPut;
 
-        let newErrorBoard = this.findError(newBoard, x, y);
+        let newErrorBoard = this.findError(newBoard);
+
+        let isSudokuSolved = this.isSudokuSolved(newBoard);
         
-        this.setState({board: newBoard, highlight: this.getEmptyBoard(false), error: newErrorBoard});
+        this.setState({board: newBoard, highlight: this.getEmptyBoard(false), error: newErrorBoard, isSudokuSolved: isSudokuSolved});
     }
 
     onDragEnter(event, x, y) {
@@ -139,14 +193,14 @@ class GameArena extends React.Component {
     }
 
     render() {
-        let {board, highlight, focus, fixed, error} = this.state;
+        let {board, highlight, focus, fixed, error, isSudokuSolved} = this.state;
 
         return (
             <div className = "gameArena">
                 <HowToPlay/>
                 <div className = "dragAndDropContainer">
                     <CellPickupBar/>
-                    <Board boardSize = {BOARD_SIZE} board = {board} highlight = {highlight} focus = {focus} fixed = {fixed} error = {error} onDrop = {this.onDrop} onDragEnter = {this.onDragEnter} onDragLeave = {this.onDragLeave}/>
+                    <Board boardSize = {BOARD_SIZE} board = {board} highlight = {highlight} focus = {focus} fixed = {fixed} error = {error} isSudokuSolved = {isSudokuSolved} onDrop = {this.onDrop} onDragEnter = {this.onDragEnter} onDragLeave = {this.onDragLeave}/>
                 </div>
                 <div className = "controls">
                     <ResetBoard/>

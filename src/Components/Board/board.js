@@ -8,7 +8,7 @@ class Board extends React.Component {
     }
 
     render() {
-        let {boardSize, board, highlight, focus, fixed, error, onDrop, onDragEnter, onDragLeave} = this.props;
+        let {boardSize, board, highlight, focus, fixed, error, isSudokuSolved, onDrop, onDragEnter, onDragLeave} = this.props;
 
         let rows = [];
         for(let i=0 ; i<boardSize ; i++) {
@@ -16,8 +16,11 @@ class Board extends React.Component {
         }
 
         return (
-            <div className = "board">
-                {rows}
+            <div className = "boardContainer">
+                {isSudokuSolved && <h2 className = "solvedBanner">Sudoku Solved!</h2>}
+                <div className = "board">
+                    {rows}
+                </div>
             </div>
         );
     }
