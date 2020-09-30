@@ -6,6 +6,7 @@
     height: 32px;
     border-radius: 4px;
     box-sizing: border-box;
+    font-weight: bold;
     background-color: yellow;
 }
 
@@ -14,7 +15,7 @@
 }
 
 .fixed {
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .error {

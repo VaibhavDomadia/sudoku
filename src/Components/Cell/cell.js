@@ -34,8 +34,15 @@ class Cell extends React.Component {
         }
 
         return (
-            <div className = {className.join(' ')} onDrop = {event => onDrop(event, rowNumber, columnNumber)} onDragOver = {this.onDragOver} onDragEnter = {event => onDragEnter(event, rowNumber, columnNumber)} onDragLeave = {event => onDragLeave(event, rowNumber, columnNumber)}>
-                {cellValue}
+            <div>
+                {
+                    fixed ? <div className = {className.join(' ')}>
+                        {cellValue == 0 ? "" : cellValue}
+                    </div> :
+                    <div className = {className.join(' ')} onDrop = {event => onDrop(event, rowNumber, columnNumber)} onDragOver = {this.onDragOver} onDragEnter = {event => onDragEnter(event, rowNumber, columnNumber)} onDragLeave = {event => onDragLeave(event, rowNumber, columnNumber)}>
+                        {cellValue == 0 ? "" : cellValue}
+                    </div>
+                }
             </div>
         );
     }

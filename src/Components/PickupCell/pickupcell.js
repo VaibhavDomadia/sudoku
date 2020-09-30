@@ -23,7 +23,9 @@ class PickupCell extends React.Component {
         let {cellValue} = this.props;
 
         return (
-            <div className = "pickupCell" draggable onDragStart = {this.onDragStart} onDragEnd = {this.onDragEnd}>{cellValue}</div>
+            <div className = "pickupCell" draggable onDragStart = {this.onDragStart} onDragEnd = {this.onDragEnd}>
+                {cellValue == 0 ? "" : cellValue}
+            </div>
         );
     }
 }

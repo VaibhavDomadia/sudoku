@@ -1,0 +1,10 @@
+.howToPlay {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    color: #404040;
+}
+
+.howToPlay div {
+    font-size: 16px;
+}

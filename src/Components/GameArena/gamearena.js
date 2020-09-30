@@ -38,8 +38,12 @@ class GameArena extends React.Component {
             }
         }
 
-        let solutionBoard = this.getEmptyBoard(0);
-        this.solveSudoku(solutionBoard);
+        let solutionBoard = new Array(BOARD_SIZE);
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            solutionBoard[i] = board[i].slice();
+        }
+
+        this.solveSudoku(solutionBoard, 0, 0);
 
         this.state = {
             board: board,
@@ -54,6 +58,7 @@ class GameArena extends React.Component {
 
         this.storeBoard = this.getEmptyBoard(0);
         this.storeError = this.getEmptyBoard(false);
+        this.solutionsFound = 0;
     }
 
     getEmptyBoard(fillValue) {
@@ -66,7 +71,6 @@ class GameArena extends React.Component {
     }
 
     createNewGame() {
-        console.log("On new Game");
         let board = this.generateBoard();
         let fixed = this.getEmptyBoard(false);
         for(let i=0 ; i<BOARD_SIZE ; i++) {
@@ -77,10 +81,11 @@ class GameArena extends React.Component {
             }
         }
 
-        let solutionBoard = this.getEmptyBoard(0);
-        this.solveSudoku(solutionBoard);
-
-        console.log(solutionBoard);
+        let solutionBoard = new Array(BOARD_SIZE);
+        for(let i=0 ; i<BOARD_SIZE ; i++) {
+            solutionBoard[i] = board[i].slice();
+        }
+        this.solveSudoku(solutionBoard, 0, 0);
 
         this.setState({board: board, fixed: fixed, highlight: this.getEmptyBoard(false), error: this.getEmptyBoard(false), isSudokuSolved: false, solutionBoard: solutionBoard, showSolutionBoard: false});
     }
@@ -127,7 +132,7 @@ class GameArena extends React.Component {
 
     generateBoard() {
         let board = this.getEmptyBoard(0);
-        this.solveSudoku(board);
+        this.solveSudoku(board, 0, 0);
 
         let indices = new Array(BOARD_SIZE * BOARD_SIZE);
         for(let i=0 ; i<BOARD_SIZE * BOARD_SIZE ; i++) {
@@ -136,86 +141,72 @@ class GameArena extends React.Component {
 
         this.shuffleArray(indices);
 
-        console.log(indices);
-
-        let lastRecordedUniqueBoard = new Array(BOARD_SIZE);
-        for(let i=0 ; i<BOARD_SIZE ; i++) {
-            lastRecordedUniqueBoard[i] = board[i].slice();
-        }
-
-        for(let i=BOARD_SIZE * BOARD_SIZE - 1 ; i>20 ; i--) {
+        let cellsRemaining = BOARD_SIZE * BOARD_SIZE;
+        for(let i=BOARD_SIZE * BOARD_SIZE - 1 ; i>=20 && cellsRemaining > 20 ; i--) {
             let index = indices[i];
+            let store = board[Math.floor(index / BOARD_SIZE)][index % BOARD_SIZE];
             board[Math.floor(index / BOARD_SIZE)][index % BOARD_SIZE] = 0;
-            let solutionsPossible = this.isMultipleSolutionsPossible(board);
-            if(solutionsPossible == 1) {
-                for(let j=0 ; j<BOARD_SIZE ; j++) {
-                    for(let k=0 ; k<BOARD_SIZE ; k++) {
-                        lastRecordedUniqueBoard[j][k] = board[j][k];
-                    }
-                }
+            
+            let passBoard = new Array(BOARD_SIZE);
+            for(let j=0 ; j<BOARD_SIZE ; j++) {
+                passBoard[j] = board[j].slice();
+            }
+            
+            this.solutionsFound = 0;
+            this.isMultipleSolutionsPossible(passBoard, 0, 0);
+            if(this.solutionsFound === 1) {
+                cellsRemaining--;
+            }
+            else {
+                board[Math.floor(index / BOARD_SIZE)][index % BOARD_SIZE] = store;
             }
         }
 
-        return lastRecordedUniqueBoard;
+        return board;
     }
 
-    isMultipleSolutionsPossible(board) {
-        let alreadyFilled = true;
-        let x = 0;
-        let y = 0;
-        outer: for(let i=0 ; i<BOARD_SIZE ; i++) {
-            for(let j=0 ; j<BOARD_SIZE ; j++) {
-                if(board[i][j] == 0) {
-                    x = i;
-                    y = j;
-                    alreadyFilled = false;
-                    break outer;
-                }
-            }
+    isMultipleSolutionsPossible(board, x, y) {
+
+        if(y === BOARD_SIZE) {
+            x++;
+            y = 0;
         }
 
-        if(alreadyFilled) {
-            return 1;
+        if(x === BOARD_SIZE) {
+            this.solutionsFound++;
+            return;
         }
 
-        let values = new Array(BOARD_SIZE);
+        if(board[x][y] != 0) {
+            this.isMultipleSolutionsPossible(board, x, y+1);
+            return;
+        }
+
         for(let i=0 ; i<BOARD_SIZE ; i++) {
-            values[i] = i+1;
-        }
-        this.shuffleArray(values);
-
-        let solutionPossibleCount = 0;
-        for(let i=0 ; i<BOARD_SIZE ; i++) {
-            if(this.isValidBoard(board, x, y, values[i])) {
-                board[x][y] = values[i];
-                solutionPossibleCount += this.isMultipleSolutionsPossible(board);
-                if(solutionPossibleCount > 1) {
-                    return solutionPossibleCount;
+            if(this.isValidBoard(board, x, y, i+1)) {
+                board[x][y] = i+1;
+                this.isMultipleSolutionsPossible(board, x, y+1);
+                if(this.solutionsFound > 1) {
+                    return;
                 }
                 board[x][y] = 0;
             }
         }
-
-        return solutionPossibleCount;
     }
 
-    solveSudoku(board) {
-        let alreadyFilled = true;
-        let x = 0;
-        let y = 0;
-        outer: for(let i=0 ; i<BOARD_SIZE ; i++) {
-            for(let j=0 ; j<BOARD_SIZE ; j++) {
-                if(board[i][j] == 0) {
-                    x = i;
-                    y = j;
-                    alreadyFilled = false;
-                    break outer;
-                }
-            }
+    solveSudoku(board, x, y) {
+
+        if(y === BOARD_SIZE) {
+            x++;
+            y = 0;
         }
 
-        if(alreadyFilled) {
+        if(x === BOARD_SIZE) {
             return true;
+        }
+
+        if(board[x][y] !== 0) {
+            return this.solveSudoku(board, x, y+1);
         }
 
         let values = new Array(BOARD_SIZE);
@@ -227,7 +218,7 @@ class GameArena extends React.Component {
         for(let i=0 ; i<BOARD_SIZE ; i++) {
             if(this.isValidBoard(board, x, y, values[i])) {
                 board[x][y] = values[i];
-                if(this.solveSudoku(board)) {
+                if(this.solveSudoku(board, x, y+1)) {
                     return true;
                 }
                 else {
@@ -264,7 +255,7 @@ class GameArena extends React.Component {
 
     shuffleArray(array) {
         for(let i=array.length-1 ; i>=0 ; i--) {
-            let index = Math.floor(Math.random() * i+1);
+            let index = Math.floor(Math.random() * (i+1));
 
             let temp = array[index];
             array[index] = array[i];
@@ -385,7 +376,15 @@ class GameArena extends React.Component {
         event.stopPropagation();
         event.target.style.border = null;
 
-        let valueToPut = event.dataTransfer.getData('text/html');
+        let value = event.dataTransfer.getData('text/html');
+
+        let valueToPut;
+        if(value == "") {
+            valueToPut = 0;
+        }
+        else {
+            valueToPut = parseInt(value);
+        }
 
         let newBoard = new Array(BOARD_SIZE);
         for(let i=0 ; i<BOARD_SIZE ; i++) {
