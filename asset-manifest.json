@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/sudoku/static/css/main.8758feb8.chunk.css",
+    "main.js": "/sudoku/static/js/main.b0b75f8f.chunk.js",
+    "main.js.map": "/sudoku/static/js/main.b0b75f8f.chunk.js.map",
+    "runtime-main.js": "/sudoku/static/js/runtime-main.f7976529.js",
+    "runtime-main.js.map": "/sudoku/static/js/runtime-main.f7976529.js.map",
+    "static/js/2.efc305a6.chunk.js": "/sudoku/static/js/2.efc305a6.chunk.js",
+    "static/js/2.efc305a6.chunk.js.map": "/sudoku/static/js/2.efc305a6.chunk.js.map",
+    "index.html": "/sudoku/index.html",
+    "precache-manifest.4f854a68c3fdc096881c155a32032952.js": "/sudoku/precache-manifest.4f854a68c3fdc096881c155a32032952.js",
+    "service-worker.js": "/sudoku/service-worker.js",
+    "static/css/main.8758feb8.chunk.css.map": "/sudoku/static/css/main.8758feb8.chunk.css.map",
+    "static/js/2.efc305a6.chunk.js.LICENSE.txt": "/sudoku/static/js/2.efc305a6.chunk.js.LICENSE.txt",
+    "static/media/githubicon.svg": "/sudoku/static/media/githubicon.a2594cec.svg",
+    "static/media/hide.svg": "/sudoku/static/media/hide.fbd6c8ea.svg",
+    "static/media/logo.svg": "/sudoku/static/media/logo.5d5d9eef.svg",
+    "static/media/new.svg": "/sudoku/static/media/new.1e7b53c1.svg",
+    "static/media/reset.svg": "/sudoku/static/media/reset.a5b1200b.svg",
+    "static/media/visible.svg": "/sudoku/static/media/visible.ad95b87b.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f7976529.js",
+    "static/js/2.efc305a6.chunk.js",
+    "static/css/main.8758feb8.chunk.css",
+    "static/js/main.b0b75f8f.chunk.js"
+  ]
+}
