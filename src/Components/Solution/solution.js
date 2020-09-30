@@ -7,8 +7,12 @@ class Solution extends React.Component {
     }
 
     render() {
+        let {showSolution, showSolutionBoard} = this.props;
+
         return (
-            <button>Show Solution</button>
+            <button onClick = {showSolution}>
+                {showSolutionBoard ? 'Hide Solution' : 'Show Solution'}
+            </button>
         );
     }
 }

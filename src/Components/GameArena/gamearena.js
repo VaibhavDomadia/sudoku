@@ -26,6 +26,7 @@ class GameArena extends React.Component {
         this.isValidBoard = this.isValidBoard.bind(this);
         this.createNewGame = this.createNewGame.bind(this);
         this.onResetBoard = this.onResetBoard.bind(this);
+        this.showSolution = this.showSolution.bind(this);
 
         let board = this.generateBoard();
         let fixed = this.getEmptyBoard(false);
@@ -37,14 +38,22 @@ class GameArena extends React.Component {
             }
         }
 
+        let solutionBoard = this.getEmptyBoard(0);
+        this.solveSudoku(solutionBoard);
+
         this.state = {
             board: board,
             highlight: this.getEmptyBoard(false),
             focus: this.getEmptyBoard(false),
             fixed: fixed,
             error: this.getEmptyBoard(false),
-            isSudokuSolved: false
+            isSudokuSolved: false,
+            solutionBoard: solutionBoard,
+            showSolutionBoard: false
         }
+
+        this.storeBoard = this.getEmptyBoard(0);
+        this.storeError = this.getEmptyBoard(false);
     }
 
     getEmptyBoard(fillValue) {
@@ -68,7 +77,12 @@ class GameArena extends React.Component {
             }
         }
 
-        this.setState({board: board, fixed: fixed, highlight: this.getEmptyBoard(false), error: this.getEmptyBoard(false), isSudokuSolved: false});
+        let solutionBoard = this.getEmptyBoard(0);
+        this.solveSudoku(solutionBoard);
+
+        console.log(solutionBoard);
+
+        this.setState({board: board, fixed: fixed, highlight: this.getEmptyBoard(false), error: this.getEmptyBoard(false), isSudokuSolved: false, solutionBoard: solutionBoard, showSolutionBoard: false});
     }
 
     onResetBoard() {
@@ -84,6 +98,31 @@ class GameArena extends React.Component {
         }
 
         this.setState({board: newBoard, fixed: fixed, highlight: this.getEmptyBoard(false), error: this.getEmptyBoard(false), isSudokuSolved: false});
+    }
+
+    showSolution() {
+        if(this.state.showSolutionBoard) {
+            let board = this.getEmptyBoard(0);
+            let error = this.getEmptyBoard(false);
+            for(let i=0 ; i<BOARD_SIZE ; i++) {
+                for(let j=0 ; j<BOARD_SIZE ; j++) {
+                    board[i][j] = this.storeBoard[i][j];
+                    error[i][j] = this.storeError[i][j];
+                }
+            }
+
+            this.setState({board: board, error: error, showSolutionBoard: false});
+        }
+        else {
+            for(let i=0 ; i<BOARD_SIZE ; i++) {
+                for(let j=0 ; j<BOARD_SIZE ; j++) {
+                    this.storeBoard[i][j] = this.state.board[i][j];
+                    this.storeError[i][j] = this.state.error[i][j];
+                }
+            }
+
+            this.setState({board: this.state.solutionBoard, error: this.getEmptyBoard(false), showSolutionBoard: true});
+        }
     }
 
     generateBoard() {
@@ -387,19 +426,19 @@ class GameArena extends React.Component {
     }
 
     render() {
-        let {board, highlight, focus, fixed, error, isSudokuSolved} = this.state;
+        let {board, highlight, focus, fixed, error, isSudokuSolved, showSolutionBoard} = this.state;
 
         return (
             <div className = "gameArena">
                 <HowToPlay/>
                 <div className = "dragAndDropContainer">
                     <CellPickupBar/>
-                    <Board boardSize = {BOARD_SIZE} board = {board} highlight = {highlight} focus = {focus} fixed = {fixed} error = {error} isSudokuSolved = {isSudokuSolved} onDrop = {this.onDrop} onDragEnter = {this.onDragEnter} onDragLeave = {this.onDragLeave}/>
+                    <Board boardSize = {BOARD_SIZE} board = {board} highlight = {highlight} focus = {focus} fixed = {fixed} error = {error} isSudokuSolved = {isSudokuSolved} showSolutionBoard = {showSolutionBoard} onDrop = {this.onDrop} onDragEnter = {this.onDragEnter} onDragLeave = {this.onDragLeave}/>
                 </div>
                 <div className = "controls">
                     <ResetBoard onResetBoard = {this.onResetBoard}/>
                     <GenerateBoard onNewGame = {this.createNewGame}/>
-                    <Solution/>
+                    <Solution showSolution = {this.showSolution} showSolutionBoard = {showSolutionBoard}/>
                 </div>
             </div>
         );
