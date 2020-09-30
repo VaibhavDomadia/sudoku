@@ -8,7 +8,7 @@ In this game the player is given a 9 X 9 board in which there are few cells alre
 
 ### Algorithm Used to Solve Sudoku:
 
-Backtracking Algorithm is used to generate the board as well as to solve the sudoku puzzle. In order to generate the board first an empty sudoku board is solved, then one by one pieces are removed from the cell randomly and then backtracking is done after every removal to ensure that the solution after removal of the cell is still unique.
+Backtracking Algorithm is used to generate the board as well as to solve the sudoku puzzle. In order to generate the board first an empty sudoku board is solved, then one by one cells are removed from the board randomly and then backtracking is done after every removal to ensure that the solution after removal of the cell is still unique.
 
 ### Play Game:
 
