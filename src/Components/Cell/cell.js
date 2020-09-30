@@ -17,9 +17,18 @@ class Cell extends React.Component {
     }
 
     render() {
-        let {cellValue, rowNumber, columnNumber, highlight, focus, fixed, error, onDrop, onDragEnter, onDragLeave} = this.props;
+        let {cellValue, rowNumber, columnNumber, highlight, fixed, error, onDrop, onDragEnter, onDragLeave} = this.props;
 
         let className = ['cell'];
+
+        let blockNumber = Math.floor(rowNumber/3)*3 + Math.floor(columnNumber/3) + 1;
+
+        if(blockNumber%2 === 0) {
+            className.push('cellLight');
+        }
+        else {
+            className.push('cellDark')
+        }
         
         if(highlight) {
             className.push('highlight');
@@ -34,8 +43,15 @@ class Cell extends React.Component {
         }
 
         return (
-            <div className = {className.join(' ')} onDrop = {event => onDrop(event, rowNumber, columnNumber)} onDragOver = {this.onDragOver} onDragEnter = {event => onDragEnter(event, rowNumber, columnNumber)} onDragLeave = {event => onDragLeave(event, rowNumber, columnNumber)}>
-                {cellValue}
+            <div>
+                {
+                    fixed ? <div className = {className.join(' ')}>
+                        {cellValue === 0 ? "" : cellValue}
+                    </div> :
+                    <div className = {className.join(' ')} onDrop = {event => onDrop(event, rowNumber, columnNumber)} onDragOver = {this.onDragOver} onDragEnter = {event => onDragEnter(event, rowNumber, columnNumber)} onDragLeave = {event => onDragLeave(event, rowNumber, columnNumber)}>
+                        {cellValue === 0 ? "" : cellValue}
+                    </div>
+                }
             </div>
         );
     }

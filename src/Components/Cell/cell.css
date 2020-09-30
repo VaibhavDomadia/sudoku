@@ -6,17 +6,29 @@
     height: 32px;
     border-radius: 4px;
     box-sizing: border-box;
-    background-color: yellow;
+    font-weight: bold;
+    font-size: 18px;
+    color: #7a58fc;
+}
+
+.cellLight {
+    background-color: rgba(122, 88, 252, 0.1);
+}
+
+.cellDark {
+    background-color: rgba(122, 88, 252, 0.2);
 }
 
 .highlight {
-    background-color: blue;
+    color: #ffffff;
+    background-color: #7a58fc;
 }
 
 .fixed {
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .error {
-    background-color: red;
+    color: #ea4335;
+    background-color: rgba(234, 68, 53, 0.2);
 }

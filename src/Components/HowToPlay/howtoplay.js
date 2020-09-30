@@ -9,7 +9,8 @@ class HowToPlay extends React.Component {
     render() {
         return (
             <div className = "howToPlay">
-                How To Play
+                <h2>How To Play</h2>
+                <div>Drag and Drop Cells to Board</div>
             </div>
         );
     }

@@ -5,6 +5,9 @@
     width: 32px;
     height: 32px;
     border-radius: 4px;
+    font-size: 18px;
+    font-weight: bold;
     cursor: move;
-    background-color: yellow;
+    color: #7a58fc;
+    background-color: rgba(121, 88, 252, 0.1);
 }

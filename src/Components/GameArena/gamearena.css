@@ -3,11 +3,13 @@
     justify-items: center;
     align-items: center;
     grid-template-columns: 1fr 2fr 1fr;
+    margin: 8px;
 }
 
 .controls {
     display: grid;
     grid-template-columns: 1fr;
+    justify-items: center;
 }
 
 .dragAndDropContainer {

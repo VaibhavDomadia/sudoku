@@ -1,5 +1,6 @@
 import React from 'react';
 import './generateboard.css';
+import NewGameIcon from '../../Icons/new.svg'
 
 class GenerateBoard extends React.Component {
     constructor(props) {
@@ -7,8 +8,13 @@ class GenerateBoard extends React.Component {
     }
 
     render() {
+        let {onNewGame} = this.props;
+
         return (
-            <button>Generate Board</button>
+            <button onClick = {onNewGame} className = "newGame">
+                <img src = {NewGameIcon} alt = "New Game"></img>
+                <div>New Game</div>
+            </button>
         );
     }
 }
