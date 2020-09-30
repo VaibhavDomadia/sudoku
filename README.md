@@ -4,7 +4,7 @@ This project is the implementation of Sudoku game made using React JS.
 
 ### Introduction to Game:
 
-In this game the player is given a 9 X 9 board in which there are few cells already filled with value from 1 to 9. The player has to fill the remaining cells in such a way that every row, every column and every blocks are having all values from 1 to 9 contained in it and appears only once.
+In this game the player is given a 9 X 9 board in which there are few cells already filled with values from 1 to 9. The player has to fill the remaining cells in such a way that every row, every column and every blocks are having all values from 1 to 9 contained in it and appears only once.
 
 ### Algorithm Used to Solve Sudoku:
 
